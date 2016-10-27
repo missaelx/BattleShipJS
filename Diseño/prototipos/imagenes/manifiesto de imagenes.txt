@@ -1,0 +1,117 @@
+manifiesto de imágenes
+
+horizontal = →
+vertical = ↑
+
+
+mar
+  mar azul
+  mar explosion
+  mar explotado
+
+barcos
+  portaaviones
+  	proa vertical
+  		proa vertical normal
+  		proa vertical explotada
+  	proa horizontal
+  		proa horizontal normal
+  		proa horizontal explotada
+  	popa vertical
+  		popa vertical normal
+  		popa vertical explotada
+  	popa horizontal
+  		popa horizontal normal
+  		popa horizontal explotada
+  	cuerpo 1 vertical
+  		cuerpo 1 vertical normal
+  		cuerpo 1 vertical explotado
+  	cuerpo 1 horizontal
+  		cuerpo 1 horizontal normal
+  		cuerpo 1 horizontal explotado
+  	cuerpo 2 vertical
+  		cuerpo 2 vertical normal
+  		cuerpo 2 vertical explotado
+  	cuerpo 2 horizontal
+  		cuerpo 2 horizontal normal
+  		cuerpo 2 horizontal explotado
+  	cuerpo 3 vertical
+  		cuerpo 3 vertical normal
+  		cuerpo 3 vertical explotado
+  	cuerpo 3 horizontal
+  		cuerpo 3 horizontal normal
+  		cuerpo 3 horizontal explotado
+
+  acorazado
+  	proa vertical
+  		proa vertical normal
+  		proa vertical explotada
+  	proa horizontal
+  		proa horizontal normal
+  		proa horizontal explotada
+  	popa vertical
+  		popa vertical normal
+  		popa vertical explotada
+  	popa horizontal
+  		popa horizontal normal
+  		popa horizontal explotada
+  	cuerpo vertical
+  		cuerpo vertical normal
+  		cuerpo vertical explotado
+  	cuerpo horizontal
+  		cuerpo horizontal normal
+  		cuerpo horizontal explotado
+
+  fragata
+  	proa vertical
+  		proa vertical normal
+  		proa vertical explotada
+  	proa horizontal
+  		proa horizontal normal
+  		proa horizontal explotada
+  	popa vertical
+  		popa vertical normal
+  		popa vertical explotada
+  	popa horizontal
+  		popa horizontal normal
+  		popa horizontal explotada
+  	cuerpo vertical
+  		cuerpo vertical normal
+  		cuerpo vertical explotado
+  	cuerpo horizontal
+  		cuerpo horizontal normal
+  		cuerpo horizontal explotado
+
+  submarino
+  	proa vertical
+  		proa vertical normal
+  		proa vertical explotada
+  	proa horizontal
+  		proa horizontal normal
+  		proa horizontal explotada
+  	popa vertical
+  		popa vertical normal
+  		popa vertical explotada
+  	popa horizontal
+  		popa horizontal normal
+  		popa horizontal explotada
+  	cuerpo vertical
+  		cuerpo vertical normal
+  		cuerpo vertical explotado
+  	cuerpo horizontal
+  		cuerpo horizontal normal
+  		cuerpo horizontal explotado
+
+  Buque minero
+  	proa vertical
+  		proa vertical normal
+  		proa vertical explotada
+  	proa horizontal
+  		proa horizontal normal
+  		proa horizontal explotada
+  	popa vertical
+  		popa vertical normal
+  		popa vertical explotada
+  	popa horizontal
+  		popa horizontal normal
+  		popa horizontal explotada
