@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
-	<title>Cliente</title>
+	<title>Andres</title>
 	<script src="http://localhost:8080/socket.io/socket.io.js"></script>
 	<script>
 	var socket = io('http://localhost:8080/');
@@ -34,6 +34,9 @@
 	mensajito.addEventListener('click', function(){
 		socket.emit('mensajePersonal', JSON.stringify(mensaje));
 	});
+	window.addEventListener("beforeunload", function(e){
+	   socket.emit("salir", "shockwave");
+	}, false);
 	</script>
 </body>
 </html>

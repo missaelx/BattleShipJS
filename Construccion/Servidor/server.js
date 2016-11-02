@@ -29,10 +29,16 @@ io.on('connection', function(socket){
 		var datos = JSON.parse(mensaje);
 		sockets.get(datos.destinatario).emit('recibirMensajePersonal', datos.mensaje);
 	});
+
+	socket.on('salir', function(usuario){
+		console.log("El usuario " + usuario + " ha salido");
+		sockets.delete(usuario);
+		console.log(sockets);
+	});
 });
 
 io.on("disconnect", function () {
-	console.log("usuario desconectado")
+	console.log("usuario desconectado");
 });
 
 //console.log(conexion.verificarUsuario("missaelxp", "missaelxp"));
