@@ -8,47 +8,21 @@ var con = mysql.createConnection({
 });
 
 
-function verificarUsuario(username,password){
+function verificarUsuario (username, password, callback) {
 	var sql = "SELECT * FROM usuarios WHERE username = ? and password = ?";
 	var inserts = [username,password];
 	sql = mysql.format(sql, inserts);
 
-	return con.query(sql, function(err,rows){
-		if(err) throw err;
-		//console.log(rows[0].username);
-		if(rows.length>0){
-			return true;
-		} else {
-			return false;
-		}
-		
-	});
-}
-
-
-
-
+    con.query(sql, function(err, rows, fields){
+    	if (err)
+    		callback(err, null);
+    	if(rows.length>0){
+    		callback(null, true);
+    	}
+    	else{
+    		callback(null, false);
+    	}
+    });
+};
 
 module.exports.verificarUsuario = verificarUsuario;
-
-
-
-
-
-
-/*con.connect(function(err){
-	if(err){
-		console.log('Error connecting to Db');
-		return;
-	}
-	
-});*/
-
-
-
-
-//con.end(function(err) {
-  // The connection is terminated gracefully
-  // Ensures all previously enqueued queries are still
-  // before sending a COM_QUIT packet to the MySQL server.
-//});
