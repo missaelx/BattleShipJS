@@ -25,11 +25,11 @@ function verificarUsuario (username, password, callback) {
     });
 };
 
-function crearPartida(username1, username2, tablero1, tablero2, callback){
+function crearPartida(usernameId1, usernameId2, tablero1, tablero2, callback){
 	var sql = "INSERT INTO partidas SET ?";
 	var inserts = {
-		idUsuario1: username1,
-		idUsuario2: username2,
+		idUsuario1: usernameId1,
+		idUsuario2: usernameId2,
 		estructuraTablero1: tablero1,
 		estructuraTablero2: tablero2
 	};
@@ -37,6 +37,7 @@ function crearPartida(username1, username2, tablero1, tablero2, callback){
 		if(err){
 			callback(err, null);
 		}
+		console.log(result);
 		if(result.affectedRows > 0){
 			callback(null, true);
 		} else {
@@ -45,9 +46,23 @@ function crearPartida(username1, username2, tablero1, tablero2, callback){
 	});
 }
 
-
-function recuperarPartida(idPartida){
-	return;
+function getIdFromUsername(username, callback){
+	var sql = "SELECT idusuarios FROM usuarios WHERE username = ?";
+	var inserts = [username];
+	sql = mysql.format(sql, inserts);
+	con.query(sql, function(err, rows, fieldss){
+		if(err){
+			callback(err, null);
+		} else {
+			callback(null, rows[0].idusuarios);
+		}
+	});
 }
 
+//function recuperarPartida(idPartida){
+//	return;
+//}
+
 module.exports.verificarUsuario = verificarUsuario;
+module.exports.crearPartida = crearPartida;
+//module.exports.getIdFromUsername = getIdFromUsername;
