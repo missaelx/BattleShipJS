@@ -37,7 +37,6 @@ function crearPartida(usernameId1, usernameId2, tablero1, tablero2, callback){
 		if(err){
 			callback(err, null);
 		}
-		console.log(result);
 		if(result.affectedRows > 0){
 			callback(null, true);
 		} else {
