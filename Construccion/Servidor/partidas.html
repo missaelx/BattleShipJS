@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Partidas</title>
+	<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+	<script>
+	var socket = io('http://localhost:8080/');
+	socket.on('connect', function () {
+		socket.on("bienvenido", function(mensaje){
+			alert("Servidor dice: " + mensaje);
+		});
+		socket.on("resultadoCreacionPartida", function(datos){
+			alert(datos);
+		});
+	});
+
+	var partida = {
+		usuario1: 1,
+		usuario2: 2,
+		tablero1: "tablero 1 papi",
+		tablero2: "tablero 2 mami"
+	};
+
+	socket.emit("crearNuevaPartida", JSON.stringify(partida));
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

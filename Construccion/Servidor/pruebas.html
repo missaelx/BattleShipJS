@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Missael</title>
+	<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+	<script>
+	var socket = io('http://localhost:8080/');
+	socket.on('connect', function () {
+		socket.on("bienvenido", function(mensaje){
+			alert("Servidor dice: " + mensaje);
+		});
+		socket.on('recibirMensajePersonal', function(mensaje){
+			alert(mensaje);
+		});
+	});
+
+	var usuario = {
+		username: "missaelxp",
+		password: "missaelxp"
+	};
+
+	socket.emit("ingresar", JSON.stringify(usuario));
+	</script>
+</head>
+<body>
+	<button id="mensajito">Enviar mensaje a andres</button>
+
+	<script>
+	var mensaje = {
+		destinatario: "shockwave",
+		mensaje: "Hola andres"
+	};
+	mensajito.addEventListener('click', function(){
+		socket.emit('mensajePersonal', JSON.stringify(mensaje));
+	});
+
+	window.addEventListener("beforeunload", function(e){
+	   socket.emit("salir", "missaelxp");
+	}, false);
+	</script>
+</body>
+</html>
