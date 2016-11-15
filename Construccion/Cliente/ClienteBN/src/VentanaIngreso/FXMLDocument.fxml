@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="360.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VentanaIngreso.FXMLDocumentController">
+   <children>
+      <TextField fx:id="tFUsuario" layoutX="192.0" layoutY="199.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label fx:id="lUsuario" layoutX="110.0" layoutY="203.0" prefHeight="17.0" prefWidth="71.0" text="Usuario" />
+      <PasswordField fx:id="tFContraseña" layoutX="192.0" layoutY="241.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label fx:id="lContraseña" layoutX="110.0" layoutY="245.0" prefHeight="17.0" prefWidth="71.0" text="Contraseña" />
+      <Button fx:id="bIngresar" layoutX="274.0" layoutY="274.0" mnemonicParsing="false" onAction="#accionIngresar" prefHeight="25.0" prefWidth="118.0" text="Ingresar" />
+      <Button fx:id="bRegistrarse" layoutX="192.0" layoutY="274.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Registrarse" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="134.0" layoutY="94.0" prefHeight="86.0" prefWidth="316.0" text="Batalla Naval">
+         <font>
+            <Font name="Magneto Bold" size="32.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
