@@ -1,0 +1,15 @@
+extends ../header.jade
+block encabezado
+	.container-fluid.contenedor-sala
+		h1 Bienvenido a la sala de juego
+		h2 #{user._id}
+		h2 #{user.nombre}
+		ul(class="nav nav-tabs")
+			li(role="presentation")
+				a(href="/game") Bienvenido
+			li(role="presentation")
+				a(href="/game/puntajes") Puntajes
+			li(role="presentation", class="active")
+				a(href="#") Partidas guardadas
+			li(role="presentation")
+				a(href="/logout") Cerrar sesión

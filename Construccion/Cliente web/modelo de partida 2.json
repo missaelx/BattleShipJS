@@ -1,0 +1,71 @@
+{
+	"usuario1": "missael",
+	"usuario2": "andres",
+	"ganador": "missael",
+	"tablero1": {
+		"portaaviones": {
+			"orientacion": "horizontal",
+			"proa": null,
+			"popa": null,
+			"cuerpo1": null,
+			"cuerpo2": null,
+			"cuerpo3": null
+		},
+		"acorazado": {
+			"orientacion": "vertical",
+			"proa": null,
+			"popa": null,
+			"cuerpo": null
+		},
+		"fragata": {
+			"orientacion": "horizontal",
+			"proa": null,
+			"popa": null,
+			"cuerpo": null
+		},
+		"submarino": {
+			"orientacion": "vertical",
+			"proa": null,
+			"popa": null,
+			"cuerpo": null
+		},
+		"buque": {
+			"proa": null,
+			"popa": null
+		}
+	},
+	"tiros1": [],
+	"tablero2": {
+		"portaaviones": {
+			"orientacion": "horizontal",
+			"proa": null,
+			"popa": null,
+			"cuerpo1": null,
+			"cuerpo2": null,
+			"cuerpo3": null
+		},
+		"acorazado": {
+			"orientacion": "vertical",
+			"proa": null,
+			"popa": null,
+			"cuerpo": null
+		},
+		"fragata": {
+			"orientacion": "horizontal",
+			"proa": null,
+			"popa": null,
+			"cuerpo": null
+		},
+		"submarino": {
+			"orientacion": "vertical",
+			"proa": null,
+			"popa": null,
+			"cuerpo": null
+		},
+		"buque": {
+			"proa": null,
+			"popa": null
+		}
+	},
+	"tiros2": []
+}

@@ -1,0 +1,46 @@
+extends ../header.jade
+block encabezado
+	.container-fluid.contenedor-general
+		h1.text-center Arma tu tablero
+		.panel.panel-info.center-block
+			.panel-heading
+				h3.panel-title Instrucciones
+			.panel-body Da doble click sobre el barco para rotar su posición, da click a un barco para seleccionarlo, da click en el campo con un barco seleccionado para colocarlo sobre el tablero.
+		.configurartablero
+			.tablero-container
+				.tablero
+					- var i = 0
+					while i < 100
+						img(src="/img_barcos/mar azul.jpg", class="casilla", data-position="#{i}")
+						- i++
+			.imagenes
+				form
+					div
+						label(for="portaaviones-check")
+							img.barcocuadrado(src="/img_barcos/cuadrado portaaviones.jpg", id="portaaviones", data-orientacion="h")
+							figcaption Portaaviones (5)
+						input(name="barco",value="portaaviones", type="radio", id="portaaviones-check", checked="checked")
+					div
+						label(for="acorazado-check")
+							img.barcocuadrado(src="/img_barcos/cuadrado acorazado.jpg", id="acorazado", data-orientacion="h")
+							figcaption Acorazado (3)
+						input(name="barco",value="acorazado", type="radio", id="acorazado-check")
+					div
+						label(for="fragata-check")
+							img.barcocuadrado(src="/img_barcos/cuadrado fragata.jpg", id="fragata", data-orientacion="h")
+							figcaption Fragata (3)
+						input(name="barco",value="fragata", type="radio", id="fragata-check")
+					div
+						label(for="submarino-check")
+							img.barcocuadrado(src="/img_barcos/cuadrado submarino.jpg", id="submarino", data-orientacion="h")
+							figcaption Submarino (3)
+						input(name="barco",value="submarino", type="radio", id="submarino-check")
+					div
+						label(for="buque-check")
+							img.barcocuadrado(src="/img_barcos/cuadrado buque.jpg", id="buque", data-orientacion="h")
+							figcaption Buque minero (2)
+						input(name="barco",value="buque", type="radio", id="buque-check")
+
+		button#empezarpartida(class="btn btn-primary btn-block btn-lg margin-top") Empezar partida
+
+	script(src="/js/armartablero.js")

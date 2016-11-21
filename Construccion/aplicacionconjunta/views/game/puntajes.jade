@@ -1,0 +1,23 @@
+extends ../header.jade
+block encabezado
+	.container-fluid.contenedor-sala
+		h1 Bienvenido a la sala de juego
+		h2 #{user._id}
+		h2 #{user.apellidos}
+		ul(class="nav nav-tabs")
+			li(role="presentation")
+				a(href="/game") Bienvenido
+			li(role="presentation", class="active")
+				a(href="#") Puntajes
+			li(role="presentation")
+				a(href="/game/partidasguardadas") Partidas guardadas
+			li(role="presentation")
+				a(href="/logout") Cerrar sesión
+		div(class="panel table-responsive")
+			table(class="table table-striped")
+				th Nombre
+				th Puntaje
+				each u in puntajes
+					tr
+						td #{u.nombre}
+						td #{u.puntaje}

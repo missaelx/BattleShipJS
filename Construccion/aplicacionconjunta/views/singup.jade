@@ -1,0 +1,25 @@
+extends ./header.jade
+block encabezado
+	.container-fluid
+		h1 Crear nuevo usuario
+		form(action="/crearusuario", method="POST")
+			.form-group
+				label(for="name") Nombre:
+				input(type="text", placeholder="ej: Missael", name="name", id="name", class="form-control")
+			.form-group
+				label(for="apellidos") Apellidos:
+				input(type="text", placeholder="ej: Hernández", name="apellidos", id="apellidos", class="form-control")
+			.form-group
+				label(for="username") Nombre de usuario:
+				input(type="text", placeholder="@missaelxp", name="username", id="username", class="form-control")
+			.form-group
+				label(for="password") Contraseña:
+				input(type="password", placeholder="Contraseña", name="password", id="password", class="form-control")
+			.form-group
+				label(for="passwordrepeat") Repite tu contraseña:
+				input(type="password", placeholder="Contraseña", name="passwordrepeat", id="passwordrepeat", class="form-control")
+			.form-group
+				input(type="submit", value="Crear cuenta", class="btn btn-primary")
+		if error
+			div(class="alert alert-danger")
+				p #{error}

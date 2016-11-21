@@ -1,0 +1,9 @@
+extends ./header.jade
+block encabezado
+	.container-fluid
+		h1 Usuarios en la base de datos
+		if usuarios
+			each user in usuarios
+				.usuario
+					b Usuario: #{user.username} - 
+					b Contraseña: #{user.password}

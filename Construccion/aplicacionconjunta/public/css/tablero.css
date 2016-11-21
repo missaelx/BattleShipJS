@@ -1,0 +1,33 @@
+.tablero-container{
+	padding: 2em;
+	display: inline-block;
+	vertical-align: middle;
+}
+.configurartablero{
+	text-align: center;
+}
+.tablero{
+	width: 400px;
+	display: inline-block;
+}
+.tablero img{
+	width: 40px;
+	height: 40px;
+	border: 1px solid white;
+	cursor: pointer;
+}
+.panel{
+	padding: 0;
+}
+.imagenes{
+	display: inline-block;
+	vertical-align: middle;
+}
+.imagenes div {
+	display: block;
+}
+.imagenes label img{
+	max-width: 70px;
+	cursor: pointer;
+}
+

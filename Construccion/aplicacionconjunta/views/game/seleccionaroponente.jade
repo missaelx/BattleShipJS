@@ -1,0 +1,13 @@
+extends ../header.jade
+block encabezado
+	.container-fluid.contenedor-sala.big-top-space
+		h1 Selecciona un oponente
+		form(method="POST", action="/game/empezarpartida")
+			.form-group
+				select(id="oponente-seleccionado", name="oponenteseleccionado", class="form-control")
+					if usuariodisponibles
+						each u in usuariodisponibles
+							if u.username != user.username
+								option(value="#{user.id}") #{user.username}
+
+			input(type="submit", value="Jugar", class="btn btn-primary btn-block")
