@@ -16,6 +16,9 @@
 	border: 1px solid white;
 	cursor: pointer;
 }
+.tablero img:hover{
+	border: 1px solid black;
+}
 .panel{
 	padding: 0;
 }

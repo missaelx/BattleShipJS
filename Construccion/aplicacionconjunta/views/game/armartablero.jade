@@ -14,7 +14,7 @@ block encabezado
 						img(src="/img_barcos/mar azul.jpg", class="casilla", data-position="#{i}")
 						- i++
 			.imagenes
-				form
+				form(action="/game/jugar", method="POST")
 					div
 						label(for="portaaviones-check")
 							img.barcocuadrado(src="/img_barcos/cuadrado portaaviones.jpg", id="portaaviones", data-orientacion="h")
@@ -41,6 +41,6 @@ block encabezado
 							figcaption Buque minero (2)
 						input(name="barco",value="buque", type="radio", id="buque-check")
 
-		button#empezarpartida(class="btn btn-primary btn-block btn-lg margin-top") Empezar partida
+					input#empezarpartida(class="btn btn-primary btn-block btn-lg margin-top", type="submit", value="Empezar partida")
 
 	script(src="/js/armartablero.js")
