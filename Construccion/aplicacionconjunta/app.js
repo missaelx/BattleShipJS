@@ -2,11 +2,18 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var User = require("./models/user").User;
-//var session = require("express-session"); //session en memoria
-var cookieSession = require("cookie-session");
+var session = require("express-session")({
+	secret: "12kdfmdkfmedkem",
+	resave: true,
+	saveUninitialized: true
+}); //session en memoria
+//var cookieSession = require("cookie-session");
+var sharedsession = require("express-socket.io-session"); //para compartir sesiones con socket.io
 var router_game = require("./routes_game");
 var session_middleware = require("./middlewares/session");
 var Map = require("collections/map");
+var server = require("http").createServer(app);
+var io = require("socket.io")(server);
 
 
 var sesiones_iniciadas = new Map();
@@ -20,17 +27,18 @@ app.use(bodyParser.json()); //montamos un middleware para peticiones application
 app.use(bodyParser.urlencoded({extended:true})); //para leer parametros de peticiones POST
 
 //para express-session
-/*app.use(session({
-	secret: "12kdfmdkfmedkem",
-	resave: false,
-	saveUninitialized: false
-}));*/
+app.use(session);
 
-app.use(cookieSession({
+//para compartir sesion con socket.io
+io.use(sharedsession(session, {
+    autoSave:true
+})); 
+
+/*app.use(cookieSession({
 	name: "session",
 	keys: ["llave-1", "llave-3"]
 }));
-
+*/
 
 app.get("/", function(req, res) { //AL INICIO carga el index
 	res.render("index");
@@ -46,7 +54,8 @@ app.get("/singup", function(req,res){ // inicio de sesion
 	res.render("singup");
 });
 app.get("/logout", function(req,res){
-	sesiones_iniciadas.delete(req.session.user_id.toString());
+	if(req.session)
+		sesiones_iniciadas.delete(req.session.user_id.toString());
 	req.session = null;	
 	res.redirect("/");
 });
@@ -152,4 +161,27 @@ app.post("/game/empezarpartida", function(req, res){
 
 });
 
-app.listen(8080);
+//socket.io logic
+
+io.on("connection", function (socket) {
+
+	socket.broadcast.emit("actualizar-numero-jugadores", sesiones_iniciadas.length)
+
+
+	//se guarda el socket con el que se puede comunicar con el usuario conectado
+	socket.on("exportar-socket", function(){
+		var userid = socket.handshake.session.user_id;
+		var usernameFromMap = sesiones_iniciadas.get(userid).username;
+		sesiones_iniciadas.set(userid, {
+			username: usernameFromMap,
+			socket: socket
+		});
+	});
+
+  	socket.on('hola', function (data) {
+    	console.log(sesiones_iniciadas);
+    	socket.emit("mostrar-datos", sesiones_iniciadas.toArray().toString());
+	});
+});
+
+server.listen(8080);

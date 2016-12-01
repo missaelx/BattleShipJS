@@ -17,3 +17,6 @@ block encabezado
 			p Bienvenido, este es el clásico juego de batalla naval, para iniciar un juego u obtener ayuda sobre él da click en iniciar juego. Este juego es en liínea por lo cual el contenido de este no es regulado, juegas bajo tu propio riesgo y Meza y Hernández Games no se hace responsable por el contenido.
 			p Actualmente hay #{usuariosconectados} usuarios conectados
 			a(href="/game/seleccionaroponente", role="button", class="btn btn-primary btn-lg active") Iniciar juego
+
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/exportar-socket.js")
