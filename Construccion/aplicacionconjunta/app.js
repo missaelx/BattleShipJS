@@ -44,6 +44,11 @@ io.use(sharedsession(session, {
 }));
 */
 
+
+
+//----------------------funcionalidades inicio de sesion
+
+
 app.get("/", function(req, res) { //AL INICIO carga el index
 	res.render("index");
 })
@@ -65,7 +70,7 @@ app.get("/logout", function(req,res){
 	req.session = null;	
 	res.redirect("/");
 });
-
+// ** funcionalidades inicio de sesion
 
 
 app.use("/game", session_middleware);
@@ -95,7 +100,9 @@ app.get("/game/seleccionaroponente", function(req,res){
 	});
 });
 
-app.get("/game/empezarpartida/:idPartida", function(req, res){
+
+
+app.get("/game/armartablero/:idPartida", function(req, res){
 	res.render("game/armartablero", {
 		idPartida: req.params.idPartida
 	});
@@ -120,7 +127,7 @@ app.post("/iniciarsesion", function(req, res) { //recibimos el formulario cuando
 		if(err){
 			console.log(err);
 		} else if(user){ //preguntamos si se encontro un usuario con las credenciales definidas
-			console.log("---------------------------------------");
+			console.log("INICIO SESION: " + req.body.username);
 			if(!sesiones_iniciadas.has(user._id.toString())){
 				sesiones_iniciadas.set(user._id.toString(), {username: user.username, id: user._id.toString()});
 				req.session.user_id = user._id;
@@ -155,7 +162,7 @@ app.post("/crearusuario", function(req, res){
 
 //game
 
-app.post("/game/empezarpartida", function(req, res){
+app.post("/game/armartablero", function(req, res){
 	res.render("game/armartablero", {
 		oponente: req.body.oponenteseleccionado
 	});
@@ -163,9 +170,7 @@ app.post("/game/empezarpartida", function(req, res){
 });
 
 app.post("/game/jugar", function(req,res){
-	res.render("game/jugar", {
-
-	});
+	res.send("Acceso no permitido");
 })
 
 app.post("/game/jugar/:id", function(req, res){
