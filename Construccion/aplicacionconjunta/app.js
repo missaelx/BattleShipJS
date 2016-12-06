@@ -103,9 +103,26 @@ app.get("/game/seleccionaroponente", function(req,res){
 
 
 app.get("/game/armartablero/:idPartida", function(req, res){
-	res.render("game/armartablero", {
-		idPartida: req.params.idPartida
-	});
+	//buscamos el id partida
+	Partida.findOne({_id: idPartida}, function(err, partida){
+		if(err){
+			console.log("error en linea 109 misa :(");
+			console.log(err);
+			res.send("Error en la busqueda de la partida");
+		} else {
+			if(partida){
+				if(req.session.user_id == partida.usuario1 || req.session.user_id == partida.usuario2){
+					res.render("game/armartablero", {
+						idPartida: req.params.idPartida
+					});
+				} else {
+					res.send("Esta partida no te pertenece");
+				}
+			} else {
+				res.send("No existe la partida que estas buscando");
+			}
+		}
+	})
 });
 
 
@@ -169,9 +186,6 @@ app.post("/game/armartablero", function(req, res){
 
 });
 
-app.post("/game/jugar", function(req,res){
-	res.send("Acceso no permitido");
-})
 
 app.post("/game/jugar/:id", function(req, res){
 	var idPartida = req.params.id;
@@ -184,7 +198,8 @@ app.post("/game/jugar/:id", function(req, res){
 					id: partida._id,
 					usuario1: partida.usuario1,
 					tablero1: partida.tablero1,
-					usuario2: partida.usuario2
+					usuario2: partida.usuario2,
+					turno: partida.turno
 				}
 			});
 			res.render("game/jugar",{partida: json});
@@ -327,3 +342,4 @@ app.get("/invitar", function(req,res){
 
 
 server.listen(8080);
+console.log("Saludos desde el puerto 8080 :)")

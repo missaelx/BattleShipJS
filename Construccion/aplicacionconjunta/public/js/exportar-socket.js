@@ -5,6 +5,6 @@ socket.on('invitacion-partida', function (data) {
 	'<div class="alert alert-info alert-dismissible">El jugador <span id="jugador2">' +
 	data.jugador2 + 
 	'</span> te ha invitado a una partida.<a id="linkInvitacion" href="' +
-	"/game/empezarpartida/" + data._id +
+	"/game/armartablero2/" + data._id +
 	'" class="alert-link"> Jugar</a></div></div>';
 });
