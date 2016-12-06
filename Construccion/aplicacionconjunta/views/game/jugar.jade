@@ -1,0 +1,34 @@
+extends ../header.jade
+block encabezado
+	.container-fluid
+		h1.text-center Juega
+		.panel.panel-info.center-block
+			.panel-heading
+				h3.panel-title Instrucciones
+			.panel-body Selecciona una posición en el tablero de tu oponente, si atinas a una posición tienes un turno extra.
+		h3#turno(class="solitario") El jugador aun no se ha conectado a la partida.
+		.partida
+			.tablero-container
+				h3 Tu tablero
+				div#tablero1.tablero
+					- var i = 0
+					while i < 100
+						img(src="/img_barcos/mar azul.jpg", class="casilla-view", data-position="#{i}")
+						- i++
+
+			.puntajes-container
+				h3 Vida
+				table(class="table table-striped table-condensed")
+
+			.tablero-container
+				h3 Tablero de tu oponente
+				div#tablero2.tablero
+					- var i = 0
+					while i < 100
+						img(src="/img_barcos/mar azul.jpg", class="casilla", data-position="#{i}")
+						- i++
+
+	input#partida(type="hidden", value="#{partida}")
+			
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/jugar.js")

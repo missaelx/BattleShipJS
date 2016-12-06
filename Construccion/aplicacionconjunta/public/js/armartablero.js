@@ -1,3 +1,4 @@
+var socket = io();
 var barcosSize = {
 	portaaviones: 5,
 	acorazado: 3,
@@ -135,8 +136,6 @@ for (var i = casillas.length - 1; i >= 0; i--) {
 				posiciones: posiciones
 			}	
 		}
-		
-		console.log(JSONTablero);
 		construirTableroFromJSON(JSONTablero);
 	});
 }
@@ -172,3 +171,54 @@ function construirTableroFromJSON(json){
 		}	
 	}
 }
+
+//funcionalidad para el boton Empezar partida
+empezarpartida.addEventListener("click", function(e){
+	e.preventDefault();
+	if(!JSONTablero.portaaviones ||
+		!JSONTablero.acorazado ||
+		!JSONTablero.fragata ||
+		!JSONTablero.submarino ||
+		!JSONTablero.buque){
+		alert("El tablero está incompleto");
+	} else {
+		socket.emit('registrar-partida', {
+			usuario: usuarioActual.value,
+			tablero: JSONTablero,
+			usuario2: oponenteSeleccionado.value,
+			turno: usuarioActual.value
+		});
+	}
+
+})
+
+socket.on("partida-registrada", function(data){
+	if(data.error){
+		alert("Hubo un error en la creacion de la partida");
+		console.log(data.error);
+	}
+	else {
+		empezarJuego.action = "/game/jugar/" + data;
+		empezarJuego.submit();
+	}
+});
+
+
+//para responder solicitud de partida
+confirmarInvitacion.addEventListener("click", function(e){
+	e.preventDefault();
+	socket.emit("aceptar-partida", {
+		tablero: JSONTablero,
+		idPartida: idPartida.value
+	});
+})
+
+socket.on("aceptar-partida-error", function(data){
+	alert(data.message);
+	console.log(data);
+})
+
+socket.on("partida-aceptada", function(data){
+	contenedorPartidaFinal.value = data;
+	empezarJuego.submit();
+});

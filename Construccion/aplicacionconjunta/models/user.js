@@ -1,8 +1,10 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+//var mongoose = require("mongoose");
 
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/fotos");
+//mongoose.Promise = global.Promise;
+//mongoose.connect("mongodb://localhost/fotos");
+
+var mongoose = require("./conexion").getConexion();
+var Schema = mongoose.Schema;
 
 var passwordvalidation = {
 	validator: function(p){

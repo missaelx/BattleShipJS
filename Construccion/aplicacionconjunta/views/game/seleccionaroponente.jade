@@ -8,6 +8,11 @@ block encabezado
 					if usuariodisponibles
 						each u in usuariodisponibles
 							if u.username != user.username
-								option(value="#{user.id}") #{user.username}
+								option(value="#{u.id}") #{u.username}
 
 			input(type="submit", value="Jugar", class="btn btn-primary btn-block")
+
+		#invitaciones
+	
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/exportar-socket.js")

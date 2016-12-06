@@ -1,8 +1,10 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+//var mongoose = require("mongoose");
 
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/fotos");
+//mongoose.Promise = global.Promise;
+//mongoose.connect("mongodb://localhost/fotos");
+
+var mongoose = require("./conexion").getConexion();
+var Schema = mongoose.Schema;
 
 var partidasSchema = new Schema({
 	usuario1: {
@@ -12,8 +14,7 @@ var partidasSchema = new Schema({
 	},
 	usuario2: {
 		type: Schema.Types.ObjectId,
-		ref: "User",
-		required: "Se necesita registrar el jugador 2"
+		ref: "User"
 	},
 	ganador: {
 		type: Schema.Types.ObjectId,
@@ -24,19 +25,21 @@ var partidasSchema = new Schema({
 		required: "Se necesita el tablero del jugador 1 para crear la partida"
 	},
 	tablero2: {
-		type: Object,
-		required: "Se necesita el tablero del jugador 2 para crear la partida"
+		type: Object
 	},
 	tiros1: {
-		type: Object,
-		required: "Se necesitan asignar los tiros del jugador 1"
+		type: Object
 	},
 	tiros2: {
-		type: Object,
-		required: "Se necesitan asignar los tiros del jugador 2"	
+		type: Object
+	},
+	turno: {
+		type: Schema.Types.ObjectId,
+		ref: "User",
+		required: "Se necesita registrar un turno"
 	}
 });
 
-var Partida = mongoose.model("Partida", user_schema);
+var Partida = mongoose.model("Partida", partidasSchema);
 
 module.exports.Partida = Partida;
