@@ -324,9 +324,12 @@ io.on("connection", function (socket) {
   				if(!partida){
   					socket.emit("lanzar-tiro-error", {message: "No existe esa partida"});
   				} else {
-  					if(origenTiro == partida.usuario1){ // entonces los tiros1 son los que buscamos
+  					console.log("Partida recuperada:");
+  					console.log(partida.tiros1);
+  					if(origenTiro == partida.usuario1.toString()){ // entonces los tiros1 son los que buscamos
   						var tiros = partida.tiros1;
   						var tiroCasilla = parseInt(data.posicion);
+  						debugger;
   						if(partida.tiros1.indexOf(tiroCasilla) == -1){ //que sea un nuevo tiro
   							tiros.push(tiroCasilla);
   							var acertoElTiro = false;
@@ -341,9 +344,6 @@ io.on("connection", function (socket) {
   							else if (partida.tablero2.buque.posiciones.indexOf(tiroCasilla) != -1)
   								acertoElTiro = true;
   							
-  							console.log("Acerto el tiro?");
-  							console.log(acertoElTiro);
-  							
   							if(acertoElTiro){
   								partida.tiros1 = tiros;
   								socket.emit("Tiro-acertado");
@@ -356,7 +356,8 @@ io.on("connection", function (socket) {
   									socket.emit("lanzar-tiro-error", err);
   								}
   								
-  								console.log(partidaUpdated)
+  								console.log("Partida guardada:")
+  								console.log(partida.tiros1);
 
 
   								sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
@@ -366,7 +367,7 @@ io.on("connection", function (socket) {
   						} else {
   							socket.emit("lanzar-tiro-error", {message: "Ya tiraste esta posicion"});
   						}
-  					} else if (origenTiro == partida.usuario2){
+  					} else if (origenTiro == partida.usuario2.toString()){
   						var tiros = partida.tiros2;
   						var tiroCasilla = parseInt(data.posicion);
   						if(partida.tiros2.indexOf(tiroCasilla) == -1){ //que sea un nuevo tiro

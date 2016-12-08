@@ -49,42 +49,19 @@ function construirTirosFromJSON(oponente, json, casillas){
 	for(var i = 0; i < tiros2.length; i++){
 		casillas[tiros2[i]].src = "/img_barcos/mar explotado.jpg";
 	}
-	//se recorren los barcos para marcar los campos tirados con explosiones si es que atinaron a un barco
-	// se checan los tiros dados en el portaaviones
-	for(var i = 0; i < tablero.portaaviones.posiciones.length; i++){
-		var indiceEnPortaaviones = tiros2.indexOf(tablero.portaaviones.posiciones[i]);
-		if(indiceEnPortaaviones != -1){
-			casillas[tablero.portaaviones.posiciones[indiceEnPortaaviones]].src = "/img_barcos/mar explosion.jpg";
-		}
-	}
-
-	for(var i = 0; i < tablero.acorazado.posiciones.length; i++){
-		var indiceEnAcorazado = tiros2.indexOf(tablero.acorazado.posiciones[i]);
-		if(indiceEnAcorazado != -1){
-			casillas[tablero.acorazado.posiciones[indiceEnAcorazado]].src = "/img_barcos/mar explosion.jpg";
-		}
-	}
-
-	for(var i = 0; i < tablero.fragata.posiciones.length; i++){
-		var indiceEnFragata = tiros2.indexOf(tablero.fragata.posiciones[i]);
-		if(indiceEnFragata != -1){
-			casillas[tablero.fragata.posiciones[indiceEnFragata]].src = "/img_barcos/mar explosion.jpg";
-		}
-	}
-
-	for(var i = 0; i < tablero.submarino.posiciones.length; i++){
-		var indiceEnSubmarino = tiros2.indexOf(tablero.submarino.posiciones[i]);
-		if(indiceEnSubmarino != -1){
-			casillas[tablero.submarino.posiciones[indiceEnSubmarino]].src = "/img_barcos/mar explosion.jpg";
+	
+	//se recorren los tiros preguntando si impactaron con algun barco
+	for(var i = 0; i < tiros2.length; i++){
+		//se pregunta si el tiro coincide con algun barco
+		if(tablero.portaaviones.posiciones.indexOf(tiros2[i]) != -1  ||
+			tablero.acorazado.posiciones.indexOf(tiros2[i]) != -1 ||
+			tablero.fragata.posiciones.indexOf(tiros2[i]) != -1 ||
+			tablero.submarino.posiciones.indexOf(tiros2[i]) != -1 ||
+			tablero.buque.posiciones.indexOf(tiros2[i]) != -1   ){
+			casillas[tiros2[i]].src = "/img_barcos/mar explosion.jpg";
 		}
 	}
 	
-	for(var i = 0; i < tablero.buque.posiciones.length; i++){
-		var indiceEnBuque = tiros2.indexOf(tablero.buque.posiciones[i]);
-		if(indiceEnBuque != -1){
-			casillas[tablero.buque.posiciones[indiceEnBuque]].src = "/img_barcos/mar explosion.jpg";
-		}
-	}
 }
 
 // funcion que actualiza las vidas de las naves en la tabla
