@@ -357,6 +357,19 @@ io.on("connection", function (socket) {
   								function(err, partidaUpdated){
   									sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
   									socket.emit("actualizar-partida", partidaUpdated);
+  									
+  									if(!exiteBarcoVivo(partidaUpdated.tablero2, partidaUpdated.tiros1)){
+  										//entonces gano el jugador 1 y se modifica la partida
+  										Partida.findOneAndUpdate(
+  											{_id: partidaUpdated._id},
+  											{ganador: partidaUpdated.usuario1},
+  											{new: true},
+  											function(err, partidaGanada){
+  												sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("partida-terminada", partidaGanada);
+  												socket.emit("partida-terminada", partidaGanada);
+  											}
+  										);
+  									}
   								}
   							);
 
@@ -395,6 +408,19 @@ io.on("connection", function (socket) {
   								function(err, partidaUpdated){
   									sesiones_iniciadas.get(partida.usuario1.toString()).socket.emit("actualizar-partida", partidaUpdated);
   									socket.emit("actualizar-partida", partidaUpdated);
+  									//verificar si la partida ha concluido
+  									if(!exiteBarcoVivo(partidaUpdated.tablero1, partidaUpdated.tiros2)){
+  										//entonces gano el jugador 2 y se modifica la partida
+  										Partida.findOneAndUpdate(
+  											{_id: partidaUpdated._id},
+  											{ganador: partidaUpdated.usuario2},
+  											{new: true},
+  											function(err, partidaGanada){
+  												sesiones_iniciadas.get(partida.usuario1.toString()).socket.emit("partida-terminada", partidaGanada);
+  												socket.emit("partida-terminada", partidaGanada);
+  											}
+  										);
+  									}
   								}
   							);
 
@@ -411,7 +437,34 @@ io.on("connection", function (socket) {
 });
 
 
-
+//funciones auxiliare
+function exiteBarcoVivo(tablero, tiros){
+	var vidas = {
+		portaaviones: 5,
+		acorazado: 3,
+		fragata: 3,
+		submarino: 3,
+		buque: 2
+	};
+	for(var i = 0; i < tiros.length; i++){
+		if(tablero.portaaviones.posiciones.indexOf(tiros[i]) != -1){
+			vidas.portaaviones--;
+		} else if(tablero.acorazado.posiciones.indexOf(tiros[i]) != -1) {
+			vidas.acorazado--;
+		} else if(tablero.fragata.posiciones.indexOf(tiros[i]) != -1) {
+			vidas.fragata--;
+		} else if(tablero.submarino.posiciones.indexOf(tiros[i]) != -1) {
+			vidas.submarino--;
+		} else if(tablero.buque.posiciones.indexOf(tiros[i]) != -1) {
+			vidas.buque--;
+		}
+	}
+	return vidas.portaaviones > 0 ||
+		   vidas.acorazado > 0 ||
+		   vidas.fragata > 0 ||
+		   vidas.submarino > 0 ||
+		   vidas.buque > 0;
+}
 
 
 

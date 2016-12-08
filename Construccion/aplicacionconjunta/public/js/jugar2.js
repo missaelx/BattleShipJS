@@ -12,17 +12,21 @@ actualizarTablaVida(1, partidaJSON.partida);
 var socket = io();
 socket.emit('exportar-socket');
 
+//funcion para clicks en casillas
+function clickCasilla(){
+	if(this.dataset.clickable === "true"){
+		socket.emit("lanzar-tiro", {
+			posicion: this.dataset.position,
+			idPartida: partidaJSON._id
+		});
+	} else {
+		alert("Espera tu turno");
+	}
+}
+
+
 Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
-	item.addEventListener("click", function(){
-		if(this.dataset.clickable === "true"){
-			socket.emit("lanzar-tiro", {
-				posicion: this.dataset.position,
-				idPartida: partidaJSON._id
-			});
-		} else {
-			alert("Espera tu turno");
-		}
-	});
+	item.addEventListener("click", clickCasilla);
 });
 socket.on("lanzar-tiro-error", function(data){
 	alert(data.message);
@@ -52,3 +56,18 @@ socket.on("actualizar-partida", function(data){
 socket.on("Tiro-acertado", function(){
 	alert("Acertaste el tiro, vuelve a tirar");
 })
+
+socket.on("partida-terminada", function(data){
+	if(data.ganador.toString() == data.usuario2.toString()){
+		alert("Has ganado el juego");
+		turno.innerHTML = "Has ganado el juego";
+	} else {
+		alert("Has perdido el juego");
+		turno.innerHTML = "Has perdido el juego";
+	}
+	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
+		item.dataset.clickable = "false";
+		item.removeEventListener("click", clickCasilla);
+	});
+
+});

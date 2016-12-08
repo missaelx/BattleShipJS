@@ -135,7 +135,7 @@ function actualizarTablaVida(oponente, jsonPartida){
 			tablero1.submarino.posiciones.splice(posicionEnSubmarino, 1);
 		}
 		if(posicionEnBuque != -1) {
-			vidas.submarino--;
+			vidas.buque--;
 			puntajeBuque.innerHTML = vidas.buque + "/" + 2;
 			tablero1.buque.posiciones.splice(posicionEnBuque, 1);
 		}
@@ -176,7 +176,7 @@ function actualizarTablaVida(oponente, jsonPartida){
 			tablero2.submarino.posiciones.splice(posicionEnSubmarino, 1);
 		}
 		if(posicionEnBuque != -1) {
-			vidas.submarino--;
+			vidas.buque--;
 			puntajeBuque2.innerHTML = vidas.buque + "/" + 2;
 			tablero2.buque.posiciones.splice(posicionEnBuque, 1);
 		}
