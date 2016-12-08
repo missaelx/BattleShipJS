@@ -351,18 +351,7 @@ io.on("connection", function (socket) {
   							} else {
   								turno = partida.usuario2.toString();
   							}
-  							/*partida.save(function(err, partidaUpdated){
-  								if(err){
-  									socket.emit("lanzar-tiro-error", err);
-  								}
-  								
-  								console.log("Partida guardada:")
-  								console.log(partida.tiros1);
-
-
-  								sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
-  								socket.emit("actualizar-partida", partidaUpdated);
-  							});*/
+  
   							Partida.findOneAndUpdate(
   								{_id: partida._id}, //query
   								{tiros1: tiros, turno: turno}, //modificaciones
