@@ -324,8 +324,6 @@ io.on("connection", function (socket) {
   				if(!partida){
   					socket.emit("lanzar-tiro-error", {message: "No existe esa partida"});
   				} else {
-  					console.log("Partida recuperada:");
-  					console.log(partida.tiros1);
   					if(origenTiro == partida.usuario1.toString()){ // entonces los tiros1 son los que buscamos
   						var tiros = partida.tiros1;
   						var tiroCasilla = parseInt(data.posicion);
@@ -344,7 +342,7 @@ io.on("connection", function (socket) {
   							else if (partida.tablero2.buque.posiciones.indexOf(tiroCasilla) != -1)
   								acertoElTiro = true;
   							
-  							//partida.tiros1 = tiros;
+  							
   							var turno = partida.turno.toString();
   							if(acertoElTiro){
   								socket.emit("Tiro-acertado");
@@ -357,9 +355,6 @@ io.on("connection", function (socket) {
   								{tiros1: tiros, turno: turno}, //modificaciones
   								{new: true}, //opciones: new = retorna el nuevo documento
   								function(err, partidaUpdated){
-  									console.log("Partida guardada:")
-  									console.log(partida.tiros1);
-  									
   									sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
   									socket.emit("actualizar-partida", partidaUpdated);
   								}
@@ -385,20 +380,23 @@ io.on("connection", function (socket) {
   							else if (partida.tablero1.buque.posiciones.indexOf(tiroCasilla) != -1)
   								acertoElTiro = true;
 
+  							var turno = partida.turno.toString();
   							if(acertoElTiro){
-  								partida.tiros2 = tiros;
   								socket.emit("Tiro-acertado");
   							} else {
-  								partida.tiros2 = tiros;
-  								partida.turno = partida.usuario2;
+  								turno = partida.usuario1.toString();
   							}
-  							partida.save(function(err, partidaUpdated){
-  								if(err){
-  									socket.emit("lanzar-tiro-error", err);
+
+
+  							Partida.findOneAndUpdate(
+  								{_id: partida._id}, //query
+  								{tiros2: tiros, turno: turno}, //modificaciones
+  								{new: true}, //opciones: new = retorna el nuevo documento
+  								function(err, partidaUpdated){
+  									sesiones_iniciadas.get(partida.usuario1.toString()).socket.emit("actualizar-partida", partidaUpdated);
+  									socket.emit("actualizar-partida", partidaUpdated);
   								}
-  								sesiones_iniciadas.get(partida.usuario1.toString()).socket.emit("actualizar-partida", partidaUpdated);
-  								socket.emit("actualizar-partida", partidaUpdated);
-  							});
+  							);
 
   						} else {
   							socket.emit("lanzar-tiro-error", {message: "Ya tiraste esta posicion"});

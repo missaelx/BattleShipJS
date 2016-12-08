@@ -24,4 +24,31 @@ Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
 		}
 	});
 });
+socket.on("lanzar-tiro-error", function(data){
+	alert(data.message);
+	console.log(data);
+});
 
+
+socket.on("actualizar-partida", function(data){
+	partidaJSON = data;
+	//construyo mis barcos
+	construirTableroFromJSON(data.tablero2, document.getElementsByClassName("casilla-view"));
+	construirTirosFromJSON(1, data, document.getElementsByClassName("casilla-view"));
+	construirTirosFromJSON(2, data, document.getElementsByClassName("casilla"));
+	actualizarTablaVida(1, data);
+	if(data.turno == data.usuario2){
+		turno.innerHTML = "Tu turno";
+		Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
+			item.dataset.clickable = "true";
+		});
+	} else {
+		turno.innerHTML = "Esperando el turno de tu oponente";
+		Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
+			item.dataset.clickable = "false";
+		});
+	}
+});
+socket.on("Tiro-acertado", function(){
+	alert("Acertaste el tiro, vuelve a tirar");
+})
