@@ -344,14 +344,14 @@ io.on("connection", function (socket) {
   							else if (partida.tablero2.buque.posiciones.indexOf(tiroCasilla) != -1)
   								acertoElTiro = true;
   							
+  							//partida.tiros1 = tiros;
+  							var turno = partida.turno.toString();
   							if(acertoElTiro){
-  								partida.tiros1 = tiros;
   								socket.emit("Tiro-acertado");
   							} else {
-  								partida.tiros1 = tiros;
-  								partida.turno = partida.usuario2;
+  								turno = partida.usuario2.toString();
   							}
-  							partida.save(function(err, partidaUpdated){
+  							/*partida.save(function(err, partidaUpdated){
   								if(err){
   									socket.emit("lanzar-tiro-error", err);
   								}
@@ -362,7 +362,19 @@ io.on("connection", function (socket) {
 
   								sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
   								socket.emit("actualizar-partida", partidaUpdated);
-  							});
+  							});*/
+  							Partida.findOneAndUpdate(
+  								{_id: partida._id}, //query
+  								{tiros1: tiros, turno: turno}, //modificaciones
+  								{new: true}, //opciones: new = retorna el nuevo documento
+  								function(err, partidaUpdated){
+  									console.log("Partida guardada:")
+  									console.log(partida.tiros1);
+  									
+  									sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
+  									socket.emit("actualizar-partida", partidaUpdated);
+  								}
+  							);
 
   						} else {
   							socket.emit("lanzar-tiro-error", {message: "Ya tiraste esta posicion"});
