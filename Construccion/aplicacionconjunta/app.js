@@ -102,8 +102,9 @@ app.get("/game/seleccionaroponente", function(req,res){
 
 
 
-app.get("/game/armartablero/:idPartida", function(req, res){
+app.get("/game/armartablero2/:idPartida", function(req, res){
 	//buscamos el id partida
+	var idPartida = req.params.idPartida;
 	Partida.findOne({_id: idPartida}, function(err, partida){
 		if(err){
 			console.log("error en linea 109 misa :(");
@@ -112,9 +113,9 @@ app.get("/game/armartablero/:idPartida", function(req, res){
 		} else {
 			if(partida){
 				if(req.session.user_id == partida.usuario1 || req.session.user_id == partida.usuario2){
-					res.render("game/armartablero", {
+					res.render("game/armartablero2", {
 						idPartida: req.params.idPartida
-					});
+					}); 
 				} else {
 					res.send("Esta partida no te pertenece");
 				}
@@ -207,6 +208,31 @@ app.post("/game/jugar/:id", function(req, res){
 	})
 });
 
+app.post("/game/jugar2/:id", function(req,res){
+	var idPartida = req.params.id;
+	Partida.findOne({_id: idPartida}, function(err, partida){
+		if(err){
+			res.send("Error en la busqueda de la partida");
+		} else {
+			if(!partida)
+				res.send("No existe esa partida");
+			var json = JSON.stringify({ //se hace string para ponerlo en el hidden
+				partida: {
+					id: partida._id,
+					usuario1: partida.usuario1,
+					tablero1: partida.tablero1,
+					tablero2: partida.tablero2,
+					usuario2: partida.usuario2,
+					tiros1: partida.tiros1,
+					tiros2: partida.tiros2,
+					turno: partida.turno
+				}
+			});
+			res.render("game/jugar2",{partida: json});
+		}
+	})
+});
+
 
 //socket.io logic
 
@@ -262,16 +288,6 @@ io.on("connection", function (socket) {
   	})
 
   	socket.on("aceptar-partida", function(data){
-  		var user1;
-  		Partida.findOne({_id: data.idPartida}, function(err, partida){
-  			if(err){
-  				console.log(err);
-  				socket.emit("aceptar-partida-error", err);
-  			} else {
-
-  			}
-  		});
-
   		Partida.findOneAndUpdate(
   			{
   				_id: data.idPartida
@@ -284,13 +300,114 @@ io.on("connection", function (socket) {
 	  		{
 	  			new: true
 	  		}, function(err, result){
-	  			sesiones_iniciadas
-	  				.get(result.usuario1)
-	  				.socket
-	  				.emit("partida-aceptada", result);
-	  			socket.emit("partida-aceptada", result);
-	  		});
+	  			if(err){
+					console.log("Error en la linea 279");
+	  				console.log(err);
+	  				socket.emit("aceptar-partida-error", err);
+	  			} else {
+	  				if(result){
+			  			sesiones_iniciadas.get(result.usuario1.toString()).socket.emit("partida-aceptada", result);
+			  			socket.emit("partida-aceptada", result);
+	  				} else {
+	  					socket.emit("aceptar-partida-error", {message: "No existe la partida"});
+	  				}
+	  			}
+	  	});
   	});
+
+  	socket.on("lanzar-tiro", function(data){
+  		var origenTiro = socket.handshake.session.user_id;
+  		Partida.findById(data.idPartida, function(err, partida){
+  			if(err){
+  				socket.emit("lanzar-tiro-error", err);
+  			} else {
+  				if(!partida){
+  					socket.emit("lanzar-tiro-error", {message: "No existe esa partida"});
+  				} else {
+  					if(origenTiro == partida.usuario1){ // entonces los tiros1 son los que buscamos
+  						var tiros = partida.tiros1;
+  						var tiroCasilla = parseInt(data.posicion);
+  						if(partida.tiros1.indexOf(tiroCasilla) == -1){ //que sea un nuevo tiro
+  							tiros.push(tiroCasilla);
+  							var acertoElTiro = false;
+  							if(partida.tablero2.portaaviones.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero2.acorazado.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero2.fragata.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero2.submarino.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero2.buque.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							
+  							console.log("Acerto el tiro?");
+  							console.log(acertoElTiro);
+  							
+  							if(acertoElTiro){
+  								partida.tiros1 = tiros;
+  								socket.emit("Tiro-acertado");
+  							} else {
+  								partida.tiros1 = tiros;
+  								partida.turno = partida.usuario2;
+  							}
+  							partida.save(function(err, partidaUpdated){
+  								if(err){
+  									socket.emit("lanzar-tiro-error", err);
+  								}
+  								
+  								console.log(partidaUpdated)
+
+
+  								sesiones_iniciadas.get(partida.usuario2.toString()).socket.emit("actualizar-partida", partidaUpdated);
+  								socket.emit("actualizar-partida", partidaUpdated);
+  							});
+
+  						} else {
+  							socket.emit("lanzar-tiro-error", {message: "Ya tiraste esta posicion"});
+  						}
+  					} else if (origenTiro == partida.usuario2){
+  						var tiros = partida.tiros2;
+  						var tiroCasilla = parseInt(data.posicion);
+  						if(partida.tiros2.indexOf(tiroCasilla) == -1){ //que sea un nuevo tiro
+  							tiros.push(tiroCasilla);
+  							var acertoElTiro = false;
+  							if(partida.tablero1.portaaviones.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero1.acorazado.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero1.fragata.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero1.submarino.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+  							else if (partida.tablero1.buque.posiciones.indexOf(tiroCasilla) != -1)
+  								acertoElTiro = true;
+
+  							if(acertoElTiro){
+  								partida.tiros2 = tiros;
+  								socket.emit("Tiro-acertado");
+  							} else {
+  								partida.tiros2 = tiros;
+  								partida.turno = partida.usuario2;
+  							}
+  							partida.save(function(err, partidaUpdated){
+  								if(err){
+  									socket.emit("lanzar-tiro-error", err);
+  								}
+  								sesiones_iniciadas.get(partida.usuario1.toString()).socket.emit("actualizar-partida", partidaUpdated);
+  								socket.emit("actualizar-partida", partidaUpdated);
+  							});
+
+  						} else {
+  							socket.emit("lanzar-tiro-error", {message: "Ya tiraste esta posicion"});
+  						}
+  					} else {
+  						socket.emit("lanzar-tiro-error", {message: "No tienes acceso a esa partida"});
+  					}
+  				}
+  			}
+  		});
+  	})
 });
 
 

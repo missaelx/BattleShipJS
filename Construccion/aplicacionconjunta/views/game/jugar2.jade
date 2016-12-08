@@ -6,7 +6,7 @@ block encabezado
 			.panel-heading
 				h3.panel-title Instrucciones
 			.panel-body Selecciona una posición en el tablero de tu oponente, si atinas a una posición tienes un turno extra.
-		h3#turno(class="solitario") El jugador aun no se ha conectado a la partida.
+		h3#turno(class="solitario") Esperando tiro del oponente
 		.partida
 			.tablero-container
 				h3 Tu tablero
@@ -57,7 +57,6 @@ block encabezado
 						td Buque
 						td#puntajeBuque2 --
 
-
 			.tablero-container
 				h3 Tablero de tu oponente
 				div#tablero2.tablero
@@ -70,4 +69,4 @@ block encabezado
 			
 	script(src="/socket.io/socket.io.js")
 	script(src="/js/jugar-core.js")
-	script(src="/js/jugar.js")
+	script(src="/js/jugar2.js")

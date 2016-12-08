@@ -16,5 +16,6 @@ socket.on("aceptar-partida-error", function(data){
 
 socket.on("partida-aceptada", function(data){
 	contenedorPartidaFinal.value = data;
+	empezarJuego.action = "/game/jugar2/" + data._id;
 	empezarJuego.submit();
 });

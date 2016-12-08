@@ -46,6 +46,7 @@
 .puntajes-container{
 	display: inline-block;
 	max-width: 500px;
+	vertical-align: middle;
 }
 .partida{
 	text-align: center;
