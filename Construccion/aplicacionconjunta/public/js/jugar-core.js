@@ -184,7 +184,4 @@ function actualizarTablaVida(oponente, jsonPartida){
 
 }
 
-partidaJSON = partida.value; //sacamos de hidden la partida
-partida.value = ""; //limpiamos el hidden
-partidaJSON = JSON.parse(partidaJSON);
 

@@ -2,8 +2,7 @@ extends ../header.jade
 block encabezado
 	.container-fluid.contenedor-sala
 		h1 Bienvenido a la sala de juego
-		h2 #{user._id}
-		h2 #{user.nombre}
+		h2 #{user.username}
 		ul(class="nav nav-tabs")
 			li(role="presentation")
 				a(href="/game") Bienvenido
@@ -12,4 +11,25 @@ block encabezado
 			li(role="presentation", class="active")
 				a(href="#") Partidas guardadas
 			li(role="presentation")
-				a(href="/logout") Cerrar sesión
+				a(href="/logout", class="text-danger") Cerrar sesión
+
+		if (partidas.length > 0)
+			h4 Reanudar partida con:
+		else 
+			h4 No hay partidas guardadas.
+		.list-group
+			if partidas
+				each p in partidas
+					if p.usuario1._id.toString() == user._id
+						-var oponenteConectado = sesiones.indexOf(p.usuario2._id.toString()) != -1;
+						-var ref = (!oponenteConectado) ? "#" : "/game/reanudar/" + p._id;
+						-var clase = (!oponenteConectado) ? "list-group-item-danger no-disponible" : "";
+						
+						a(href="#{ref}",class="list-group-item #{clase}") Reanudar partida con: #{p.usuario2.username}
+					else
+						-var oponenteConectado = sesiones.indexOf(p.usuario1._id.toString()) != -1;
+						-var ref = (!oponenteConectado) ? "#" : "/game/reanudar/" + p._id;
+						-var clase = (!oponenteConectado) ? "list-group-item-danger no-disponible" : "";
+						a(href="#{ref}",class="list-group-item #{clase}") Reanudar partida con: #{p.usuario1.username}
+	
+	script(src="/js/partidasguardadas.js")

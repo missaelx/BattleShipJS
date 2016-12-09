@@ -44,7 +44,16 @@ io.use(sharedsession(session, {
 }));
 */
 
+//funcion para conseguir las llave de las sesiones iniciadas
 
+function arrayIdSesiones(){
+	var arreglo = [];
+	var mapIterator = sesiones_iniciadas.keys();
+	for(var i = 0; i < sesiones_iniciadas.length; i++){
+		arreglo.push(mapIterator.next().value);
+	}
+	return arreglo;
+}
 
 //----------------------funcionalidades inicio de sesion
 
@@ -81,17 +90,62 @@ app.get("/game/", function(req,res){
 });
 
 app.get("/game/puntajes", function(req, res){
-	res.render("game/puntajes", {
-		puntajes: [
-			{
-				nombre: "Missael",
-				puntaje: 3
+
+	Partida.aggregate([
+		{"$group": {
+			"_id": "$ganador",
+			"count": {"$sum":1}
 			}
-		]
+		},
+		{"$sort": {"count":-1}}
+	], function(err, result){
+		if(err){
+			console.log(err);
+			res.send("Error en servidor");
+		}
+		User.populate(result, {path: "_id"}, function(err, resultFinal){
+			if(err){
+				console.log(err);
+				res.send("Error en servidor");
+			} else {
+				res.render("game/puntajes", {
+					puntajes: resultFinal
+				});
+			}
+		})
 	});
 });
 app.get("/game/partidasguardadas", function(req, res){
-	res.render("game/partidasguardadas");
+	var usuarioInteresado = req.session.user_id;
+	Partida.find({
+		"$or": [
+			{"$and": [
+				{usuario1: usuarioInteresado},
+				{ganador: null }
+			]},
+			{"$and": [
+				{usuario2: usuarioInteresado},
+				{ganador: null }
+			]}
+		]
+	},"_id usuario1 usuario2",function(err, result){
+		if(err){
+			console.log(err);
+			res.send("Error en el servidor");
+		} else {
+			User.populate(result, {path: "usuario1 usuario2"}, function(err, resultFinal){
+				if(err){
+					console.log(err);
+					res.send("Error en el servidor");
+				} else {
+					res.render("game/partidasguardadas", {
+						partidas: resultFinal,
+						sesiones: arrayIdSesiones()
+					});
+				}
+			})
+		}
+	});
 });
 
 app.get("/game/seleccionaroponente", function(req,res){
@@ -126,9 +180,47 @@ app.get("/game/armartablero2/:idPartida", function(req, res){
 	})
 });
 
+app.get("/game/reanudar/:idPartida", function(req,res){
+	var usuarioInteresado = req.session.user_id;
+	Partida.findById(req.params.idPartida, function(err, partida){
+		if(err){
+			console.log(err);
+			res.send("Error en el servidor");
+		} else {
+			if(!partida){
+				res.send("Esa partida no existe");
+			} else {
+				if(partida.usuario1 == usuarioInteresado ||
+					partida.usuario2 == usuarioInteresado){
+					res.render("game/reanudar", {partida: req.params.idPartida});
+				} else {
+					res.send("No tienes acceso a esta partida");
+				}
+			}
+		}
+	});
+});
 
-
-
+app.get("/game/reanudar2/:idPartida", function(req,res){
+	var usuarioInteresado = req.session.user_id;
+	Partida.findById(req.params.idPartida, function(err, partida){
+		if(err){
+			console.log(err);
+			res.send("Error en el servidor");
+		} else {
+			if(!partida){
+				res.send("Esa partida no existe");
+			} else {
+				if(partida.usuario1 == usuarioInteresado ||
+					partida.usuario2 == usuarioInteresado){
+					res.render("game/reanudar", {partida: req.params.idPartida, second: true});
+				} else {
+					res.send("No tienes acceso a esta partida");
+				}
+			}
+		}
+	});
+});
 
 
 
@@ -238,7 +330,7 @@ app.post("/game/jugar2/:id", function(req,res){
 
 io.on("connection", function (socket) {
 
-	socket.broadcast.emit("actualizar-numero-jugadores", sesiones_iniciadas.length)
+	socket.broadcast.emit("actualizar-numero-jugadores", sesiones_iniciadas.length);
 
 
 	//se guarda el socket con el que se puede comunicar con el usuario conectado
@@ -434,8 +526,52 @@ io.on("connection", function (socket) {
   			}
   		});
   	})
-});
+	
+	socket.on("solicitar-partida", function(data){
+		var usuarioSolicitante = socket.handshake.session.user_id;
+		Partida.findById(data, function(err, partida){
+			if(err){
+				console.log(err);
+				socket.emit("solicitar-partida-error", err);
+			} else {
+				if(partida.usuario1.toString() == usuarioSolicitante || partida.usuario2.toString() == usuarioSolicitante){
+					socket.emit("recibir-partida", partida);
+				} else {
+					socket.emit("solicitar-partida-error", {message: "No te pertenece esta partida"});
+				}
+			}
+		});
+	});
 
+	socket.on("esperando-reanudar", function(data){
+		var usuarioOrigen = data.usuario1;
+  		var usuarioRetado = data.oponente;
+
+  		User.findOne({_id: usuarioOrigen}, function(err, user){
+  			if(err){
+  				socket.emit("esperando-reanudar-error", err);
+  			} else {
+  				sesiones_iniciadas.get(usuarioRetado).socket.emit("invitacion-reanudar", {
+  					_id: data.partida,
+					jugador2: user.username
+  				});
+  			}
+  		});
+	});
+
+	socket.on("reanudar-aceptado", function(data){
+		var usuarioOrigen = data.usuario1;
+  		var usuarioRetado = data.oponente;
+
+  		User.findOne({_id: usuarioOrigen}, function(err, user){
+  			if(err){
+  				socket.emit("reanudar-aceptado-error", err);
+  			} else {
+  				sesiones_iniciadas.get(usuarioRetado).socket.emit("oponente-acepto-reanudar", data.partida);
+  			}
+  		});
+	});
+});
 
 //funciones auxiliare
 function exiteBarcoVivo(tablero, tiros){
@@ -510,6 +646,41 @@ app.get("/invitar", function(req,res){
 	});
 });
 
+app.get("/puntajes", function(req, res){
+
+	Partida.aggregate([
+		{"$group": {
+			"_id": "$ganador",
+			"count": {"$sum":1}
+			}
+		},
+		{"$sort": {"count":-1}},
+		{
+			"$lookup": {
+				"from": "User",
+				"localField": "_id",
+		        "foreignField": "ganador",
+		        "as": "datos"
+			}
+		}
+	], function(err, result){
+		//console.log(err||result[1].datos);
+		//res.send("Ver consola");
+		User.populate(result, {path: "_id"}, function(err, resultFinal){
+			console.log(err||resultFinal);
+			res.send("Ver consola");
+		})
+	});
+
+
+});
+
+
+app.get("/sesiones", function(req,res){
+	console.log(arrayIdSesiones());
+	res.send("Sesiones en consola");
+})
+
 
 server.listen(8080);
-console.log("Saludos desde el puerto 8080 :)")
+console.log("Saludos desde el puerto 8080 :)");

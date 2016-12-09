@@ -1,3 +1,7 @@
+partidaJSON = partida.value; //sacamos de hidden la partida
+partida.value = ""; //limpiamos el hidden
+partidaJSON = JSON.parse(partidaJSON);
+
 var json = {
 	portaaviones: partidaJSON.partida.tablero2.portaaviones,
 	acorazado: partidaJSON.partida.tablero2.acorazado,
@@ -71,3 +75,4 @@ socket.on("partida-terminada", function(data){
 	});
 
 });
+

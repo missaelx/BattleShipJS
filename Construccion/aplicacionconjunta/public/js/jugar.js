@@ -1,3 +1,7 @@
+partidaJSON = partida.value; //sacamos de hidden la partida
+partida.value = ""; //limpiamos el hidden
+partidaJSON = JSON.parse(partidaJSON);
+
 var json = {
 	portaaviones: partidaJSON.partida.tablero1.portaaviones,
 	acorazado: partidaJSON.partida.tablero1.acorazado,
@@ -34,16 +38,6 @@ socket.on("partida-aceptada", function(data){
 		tiros: data.tiros1
 	},
 	document.getElementsByClassName("casilla-view"));
-
-	/*construirTableroFromJSON({
-		portaaviones: data.tablero2.portaaviones,
-		acorazado: data.tablero2.acorazado,
-		fragata: data.tablero2.fragata,
-		submarino: data.tablero2.submarino,
-		buque: data.tablero2.buque,
-		tiros: data.tiros2
-	},
-	document.getElementsByClassName("casilla"));*/
 
 	partidaJSON = data;
 });
@@ -94,10 +88,10 @@ socket.on("Tiro-acertado", function(){
 socket.on("partida-terminada", function(data){
 	if(data.ganador.toString() == data.usuario1.toString()){
 		alert("Has ganado el juego");
-		turno.innerHTML = "Has ganado el juego";
+		turno.innerHTML = "Has ganado el juego " + '<a href="/game">Volver</a>';
 	} else {
 		alert("Has perdido el juego");
-		turno.innerHTML = "Has perdido el juego";
+		turno.innerHTML = "Has perdido el juego " + '<a href="/game">Volver</a>';
 	}
 	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
 		item.dataset.clickable = "false";
@@ -105,3 +99,4 @@ socket.on("partida-terminada", function(data){
 	});
 
 });
+
