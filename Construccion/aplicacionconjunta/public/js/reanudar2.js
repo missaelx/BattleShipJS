@@ -1,3 +1,4 @@
+"use strict";
 var socket = io();
 var partidaJSON;
 var usuarioActual = usuario.value;
@@ -62,7 +63,7 @@ socket.on('recibir-partida', function(data){
 		partida: data,
 		usuario1: usuarioActual,
 		oponente: idOponente
-	})
+	});
 
 	//se agregan los escuchas
 	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
@@ -73,17 +74,17 @@ socket.on('recibir-partida', function(data){
 
 socket.on("reanudar-aceptado-error", function(data){
 	alert(data.message);
-})
+});
 
 //logica del juego
 socket.on("Tiro-acertado", function(){
 	alert("Acertaste el tiro, vuelve a tirar");
-})
+});
 
 socket.on("lanzar-tiro-error", function(data){
 	alert(data.message);
 	console.log(data);
-})
+});
 
 socket.on("partida-terminada", function(data){
 	if(data.ganador.toString() == usuarioActual){
@@ -142,9 +143,9 @@ socket.on("actualizar-partida", function(data){
 window.addEventListener("beforeunload", function(){
 	var data;
 	if(partidaJSON.usuario1.toString() == usuarioActual){
-		data = {oponente: partidaJSON.usuario2.toString()}
+		data = {oponente: partidaJSON.usuario2.toString()};
 	} else{
-		data = {oponente: partidaJSON.usuario1.toString()}
+		data = {oponente: partidaJSON.usuario1.toString()};
 	}
 
 	socket.emit("abandone-partida", data);
@@ -157,4 +158,4 @@ socket.on("oponente-abandono-partida", function(){
 		item.dataset.clickable = "false";
 		item.removeEventListener("click", clickCasilla);
 	});
-})
+});

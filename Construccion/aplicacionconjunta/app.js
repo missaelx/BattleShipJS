@@ -1,3 +1,4 @@
+"use strict";
 var express    = require("express");
 var app        = express();
 var bodyParser = require("body-parser");
@@ -61,11 +62,11 @@ function arrayIdSesiones(){
 
 app.get("/", function(req, res) { //AL INICIO carga el index
 	res.render("index");
-})
+});
 
 app.get("/login", function(req, res){ //pagina de logueo
 	res.render("login");
-})
+});
 app.get("/login/:id", function(req,res){ //para el inicio de sesion despues de crear cuenta
 	res.render("login", {cuentacreada: true});
 });
@@ -113,7 +114,7 @@ app.get("/game/puntajes", function(req, res){
 					puntajes: resultFinal
 				});
 			}
-		})
+		});
 	});
 });
 app.get("/game/partidasguardadas", function(req, res){
@@ -144,7 +145,7 @@ app.get("/game/partidasguardadas", function(req, res){
 						sesiones: arrayIdSesiones()
 					});
 				}
-			})
+			});
 		}
 	});
 });
@@ -178,7 +179,7 @@ app.get("/game/armartablero2/:idPartida", function(req, res){
 				res.send("No existe la partida que estas buscando");
 			}
 		}
-	})
+	});
 });
 
 app.get("/game/reanudar/:idPartida", function(req,res){
@@ -251,7 +252,7 @@ app.post("/iniciarsesion", function(req, res) { //recibimos el formulario cuando
 		}
 		
 	});
-})
+});
 
 app.post("/crearusuario", function(req, res){
 	var nombre = req.body.name;
@@ -269,7 +270,7 @@ app.post("/crearusuario", function(req, res){
 			res.redirect("/login/" + nombre);
 		}
 	});
-})
+});
 
 //game
 
@@ -298,7 +299,7 @@ app.post("/game/jugar/:id", function(req, res){
 			});
 			res.render("game/jugar",{partida: json});
 		}
-	})
+	});
 });
 
 app.post("/game/jugar2/:id", function(req,res){
@@ -323,7 +324,7 @@ app.post("/game/jugar2/:id", function(req,res){
 			});
 			res.render("game/jugar2",{partida: json});
 		}
-	})
+	});
 });
 
 
@@ -356,11 +357,11 @@ io.on("connection", function (socket) {
     	partida.save(function(err, partida){
     		if(err){
 				console.log(err);
-				socket.emit("partida-registrada", {error: err})
+				socket.emit("partida-registrada", {error: err});
 			} else {
 				socket.emit("partida-registrada", partida._id);
 			}
-    	})
+    	});
 	});
 
 
@@ -378,7 +379,7 @@ io.on("connection", function (socket) {
   				});
   			}
   		});
-  	})
+  	});
 
   	socket.on("aceptar-partida", function(data){
   		Partida.findOneAndUpdate(
@@ -417,10 +418,11 @@ io.on("connection", function (socket) {
   				if(!partida){
   					socket.emit("lanzar-tiro-error", {message: "No existe esa partida"});
   				} else {
+  					var tiros;
+  					var tiroCasilla;
   					if(origenTiro == partida.usuario1.toString()){ // entonces los tiros1 son los que buscamos
-  						var tiros = partida.tiros1;
-  						var tiroCasilla = parseInt(data.posicion);
-  						debugger;
+  						tiros = partida.tiros1;
+  						tiroCasilla = parseInt(data.posicion);
   						if(partida.tiros1.indexOf(tiroCasilla) == -1){ //que sea un nuevo tiro
   							tiros.push(tiroCasilla);
   							var acertoElTiro = false;
@@ -470,8 +472,8 @@ io.on("connection", function (socket) {
   							socket.emit("lanzar-tiro-error", {message: "Ya tiraste esta posicion"});
   						}
   					} else if (origenTiro == partida.usuario2.toString()){
-  						var tiros = partida.tiros2;
-  						var tiroCasilla = parseInt(data.posicion);
+  						tiros = partida.tiros2;
+  						tiroCasilla = parseInt(data.posicion);
   						if(partida.tiros2.indexOf(tiroCasilla) == -1){ //que sea un nuevo tiro
   							tiros.push(tiroCasilla);
   							var acertoElTiro = false;
@@ -526,7 +528,7 @@ io.on("connection", function (socket) {
   				}
   			}
   		});
-  	})
+  	});
 	
 	socket.on("solicitar-partida", function(data){
 		var usuarioSolicitante = socket.handshake.session.user_id;
@@ -621,7 +623,7 @@ app.get("/users", function(req,res){
 			res.send("Hubo un error, ya esta en consola");
 			console.log(err);
 		} else {
-			console.log("Sessiones iniciadas: ")
+			console.log("Sessiones iniciadas: ");
 			console.log(sesiones_iniciadas.toArray());
 			res.render("pruebas/users",{usuarios: doc});
 		}
@@ -676,7 +678,7 @@ app.get("/puntajes", function(req, res){
 		User.populate(result, {path: "_id"}, function(err, resultFinal){
 			console.log(err||resultFinal);
 			res.send("Ver consola");
-		})
+		});
 	});
 
 
@@ -686,7 +688,7 @@ app.get("/puntajes", function(req, res){
 app.get("/sesiones", function(req,res){
 	console.log(arrayIdSesiones());
 	res.send("Sesiones en consola");
-})
+});
 
 
 server.listen(8080);
