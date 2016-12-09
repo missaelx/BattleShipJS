@@ -137,3 +137,24 @@ socket.on("actualizar-partida", function(data){
 		});
 	}
 });
+
+//prevenir el cierre de la partida
+window.addEventListener("beforeunload", function(){
+	var data;
+	if(partidaJSON.usuario1.toString() == usuarioActual){
+		data = {oponente: partidaJSON.usuario2.toString()}
+	} else{
+		data = {oponente: partidaJSON.usuario1.toString()}
+	}
+
+	socket.emit("abandone-partida", data);
+});
+
+socket.on("oponente-abandono-partida", function(){
+	alert("Tu oponente abandono la partida");
+	turno.innerHTML = "Vuelve al inicio para volver a jugar " + '<a href="/game">Volver</a>';
+	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
+		item.dataset.clickable = "false";
+		item.removeEventListener("click", clickCasilla);
+	});
+})

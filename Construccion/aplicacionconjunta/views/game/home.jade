@@ -1,8 +1,8 @@
 extends ../header.jade
 block encabezado
-	.container-fluid.contenedor-sala
-		h1 Bienvenido a la sala de juego
-		h2 #{user.nombre}
+	.container-fluid.contenedor-sala.margin-top
+		h1.text-center Bienvenido a la sala de juego
+		h2.text-center.medium-bottom-space #{user.nombre}
 		ul(class="nav nav-tabs")
 			li(role="presentation", class="active")
 				a(href="#") Bienvenido
@@ -12,10 +12,10 @@ block encabezado
 				a(href="/game/partidasguardadas") Partidas guardadas
 			li(role="presentation")
 				a(href="/logout", class="text-danger") Cerrar sesión
-		div(class="panel")
-			p Bienvenido, este es el clásico juego de batalla naval, para iniciar un juego u obtener ayuda sobre él da click en iniciar juego. Este juego es en liínea por lo cual el contenido de este no es regulado, juegas bajo tu propio riesgo y Meza y Hernández Games no se hace responsable por el contenido.
+		div(class="panel padding-importante")
+			p Bienvenido, este es el clásico juego de batalla naval, para iniciar un juego u obtener ayuda sobre él da click en iniciar juego. Este juego es en liínea por lo cual el contenido de este no es regulado, juegas bajo tu propio riesgo y #[strong Missael y Andres Games] no se hace responsable por el contenido.
 			p Actualmente hay #[span#usuariosconectados #{usuariosconectados}] usuarios conectados
-			a#seleccionaroponente(href="/game/seleccionaroponente", role="button", class="btn btn-primary btn-lg active") Iniciar juego
+			a#seleccionaroponente(href="/game/seleccionaroponente", role="button", class="btn btn-primary btn-lg active center-block") Iniciar juego
 		
 
 		div#invitaciones

@@ -1,0 +1,1 @@
+1.- El rediereccionamiento de la raiz del dominio causa error con sesiones iniciadas

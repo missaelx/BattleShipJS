@@ -1,8 +1,8 @@
 extends ../header.jade
 block encabezado
-	.container-fluid.contenedor-sala
-		h1 Bienvenido a la sala de juego
-		h2 #{user.username}
+	.container-fluid.contenedor-sala.margin-top
+		h1.text-center Bienvenido a la sala de juego
+		h2.text-center.medium-bottom-space #{user.nombre}
 		ul(class="nav nav-tabs")
 			li(role="presentation")
 				a(href="/game") Bienvenido
@@ -31,5 +31,7 @@ block encabezado
 						-var ref = (!oponenteConectado) ? "#" : "/game/reanudar/" + p._id;
 						-var clase = (!oponenteConectado) ? "list-group-item-danger no-disponible" : "";
 						a(href="#{ref}",class="list-group-item #{clase}") Reanudar partida con: #{p.usuario1.username}
-	
+		div#invitaciones
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/exportar-socket.js")
 	script(src="/js/partidasguardadas.js")

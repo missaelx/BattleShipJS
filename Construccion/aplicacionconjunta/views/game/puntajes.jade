@@ -1,8 +1,8 @@
 extends ../header.jade
 block encabezado
-	.container-fluid.contenedor-sala
-		h1 Bienvenido a la sala de juego
-		h2 #{user.username}
+	.container-fluid.contenedor-sala.margin-top
+		h1.text-center Bienvenido a la sala de juego
+		h2.text-center.medium-bottom-space #{user.nombre}
 		ul(class="nav nav-tabs")
 			li(role="presentation")
 				a(href="/game") Bienvenido
@@ -22,3 +22,6 @@ block encabezado
 							if u._id != null
 								td #{u._id.username}
 								td #{u.count}
+		div#invitaciones
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/exportar-socket.js")

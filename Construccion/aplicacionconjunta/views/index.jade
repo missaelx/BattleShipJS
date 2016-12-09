@@ -1,9 +1,10 @@
 extends ./header.jade
 block encabezado
-	.container-fluid
+	#index-container(class="container-fluid big-top-space contenedor-formulario")
 		h1 Bienvenido
 		h2 Batalla naval
+		h6 Por: Missael y Andres Games
+		p.margin-top
+			a(href="/login", class="btn btn-primary btn-lg btn-block") Inicia sesión
 		p
-			a(href="/login", class="btn btn-primary") Inicia sesión
-		p
-			a(href="/singup", class="btn btn-default") Registrarte
+			a(href="/singup", class="btn btn-default btn-lg btn-block") Registrarte

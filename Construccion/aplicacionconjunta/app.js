@@ -3,6 +3,7 @@ var app        = express();
 var bodyParser = require("body-parser");
 var User       = require("./models/user").User;
 var Partida    = require("./models/partidas").Partida;
+var MD5        = require("blueimp-md5");
 
 var session = require("express-session")({ //session en memoria
 	secret: "12kdfmdkfmedkem",
@@ -13,7 +14,7 @@ var session = require("express-session")({ //session en memoria
 //var cookieSession = require("cookie-session");
 
 var sharedsession      = require("express-socket.io-session"); //para compartir sesiones con socket.io
-var router_game        = require("./routes_game");
+//var router_game        = require("./routes_game");
 var session_middleware = require("./middlewares/session");
 var Map                = require("collections/map");
 var server             = require("http").createServer(app);
@@ -232,7 +233,7 @@ app.get("/game/reanudar2/:idPartida", function(req,res){
 app.post("/iniciarsesion", function(req, res) { //recibimos el formulario cuando se intenta iniciar sesion
 	User.findOne({
 		username: req.body.username,
-		password: req.body.password
+		password: MD5(req.body.password)
 	}, function(err, user){
 		if(err){
 			console.log(err);
@@ -253,13 +254,13 @@ app.post("/iniciarsesion", function(req, res) { //recibimos el formulario cuando
 })
 
 app.post("/crearusuario", function(req, res){
-	var nombre = req.body.name; 
+	var nombre = req.body.name;
 	var user = new User({
 		nombre: req.body.name,
 		apellidos: req.body.apellidos,
 		username: req.body.username,
-		password_confirmation: req.body.passwordrepeat,
-		password: req.body.password
+		password_confirmation: MD5(req.body.passwordrepeat),
+		password: MD5(req.body.password)
 	});
 	user.save(function(err){
 		if(err){
@@ -571,6 +572,12 @@ io.on("connection", function (socket) {
   			}
   		});
 	});
+
+
+	socket.on("abandone-partida", function(data){
+		sesiones_iniciadas.get(data.oponente).socket.emit("oponente-abandono-partida");
+	});
+
 });
 
 //funciones auxiliare

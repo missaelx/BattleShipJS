@@ -100,3 +100,17 @@ socket.on("partida-terminada", function(data){
 
 });
 
+//prevenir abandono de partidas
+window.addEventListener("beforeunload", function(){
+	socket.emit("abandone-partida", {
+		oponente: partidaJSON.usuario2.toString()
+	});
+});
+socket.on("oponente-abandono-partida", function(){
+	alert("Tu oponente abandono la partida");
+	turno.innerHTML = "Vuelve al inicio para volver a jugar " + '<a href="/game">Volver</a>';
+	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
+		item.dataset.clickable = "false";
+		item.removeEventListener("click", clickCasilla);
+	});
+})

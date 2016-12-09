@@ -64,10 +64,10 @@ socket.on("Tiro-acertado", function(){
 socket.on("partida-terminada", function(data){
 	if(data.ganador.toString() == data.usuario2.toString()){
 		alert("Has ganado el juego");
-		turno.innerHTML = "Has ganado el juego";
+		turno.innerHTML = "Has ganado el juego " + '<a href="/game">Volver</a>';
 	} else {
 		alert("Has perdido el juego");
-		turno.innerHTML = "Has perdido el juego";
+		turno.innerHTML = "Has perdido el juego " + '<a href="/game">Volver</a>';
 	}
 	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
 		item.dataset.clickable = "false";
@@ -76,3 +76,18 @@ socket.on("partida-terminada", function(data){
 
 });
 
+//prevenir el cierre de la partida
+window.addEventListener("beforeunload", function(){
+	socket.emit("abandone-partida", {
+		oponente: partidaJSON.usuario1.toString()
+	});
+});
+
+socket.on("oponente-abandono-partida", function(){
+	alert("Tu oponente abandono la partida");
+	turno.innerHTML = "Vuelve al inicio para volver a jugar " + '<a href="/game">Volver</a>';
+	Array.from(document.getElementsByClassName("casilla")).forEach(function(item){
+		item.dataset.clickable = "false";
+		item.removeEventListener("click", clickCasilla);
+	});
+})

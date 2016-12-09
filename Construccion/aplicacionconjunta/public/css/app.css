@@ -1,16 +1,36 @@
 .big-top-space{
 	margin-top: 100px;
 }
+.medium-bottom-space{
+	margin-bottom: 40px;
+}
 .panel{
 	max-width: 500px;
 	padding: 1em;
 }
+.padding-importante{
+	padding: 1em!important;	
+}
 .contenedor-sala{
 	max-width: 600px;
+}
+.contenedor-formulario{
+	max-width: 500px;
 }
 .contenedor-general{
 	max-width: 800px;
 }
 .margin-top{
 	margin-top: 1em;
+}
+
+
+#singup-container h1,
+#login-container h1,
+#index-container h1,
+#index-container h2 {
+	text-align: center;
+}
+p{
+	text-align: justify;
 }
