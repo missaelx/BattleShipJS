@@ -1,18 +1,22 @@
-//var mongoose = require("mongoose");
 
-//mongoose.Promise = global.Promise;
-//mongoose.connect("mongodb://localhost/fotos");
 
 var mongoose = require("./conexion").getConexion();
+/**
+* Contiene una referencia al constructor de Schema de Mongoose
+*/
 var Schema = mongoose.Schema;
-
+/**
+* Verifica que las contraseñas enviadas desde el cliente coincidad
+*/
 var passwordvalidation = {
 	validator: function(p){
 		return this.password_confirmation == p;
 	},
 	message: "Las contraseñas no son iguales"
 }
-
+/**
+* Genera un nuevo Schema
+*/
 var user_schema = new Schema({
 	nombre: {type:String, required: "El nombre es obligatorio"},
 	apellidos: {type:String, required: "Los apellidos son obligatorios"},
@@ -24,7 +28,9 @@ var user_schema = new Schema({
 		validate: passwordvalidation
 	}
 });
-
+/**
+* Asigna el virtual para la verificacion de contraseñas
+*/
 user_schema
 	.virtual("password_confirmation")
 	.get(function(){
@@ -33,7 +39,11 @@ user_schema
 	.set(function(pass){
 		this.p_c = pass;
 	});
-
+/**
+* Guarda el modelo en la base de datos, exportando una referencia a él.
+*/
 var User = mongoose.model("User", user_schema);
-
+/**
+* Exporta la referencia al Schema
+*/
 module.exports.User = User;

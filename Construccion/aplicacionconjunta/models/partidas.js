@@ -1,11 +1,14 @@
-//var mongoose = require("mongoose");
 
-//mongoose.Promise = global.Promise;
-//mongoose.connect("mongodb://localhost/fotos");
 
 var mongoose = require("./conexion").getConexion();
+/**
+* Contiene una referencia al constructor de Schema de Mongoose
+*/
 var Schema = mongoose.Schema;
 
+/**
+* Genera un nuevo Schema
+*/
 var partidasSchema = new Schema({
 	usuario1: {
 		type: Schema.Types.ObjectId,
@@ -40,6 +43,11 @@ var partidasSchema = new Schema({
 	}
 });
 
+/**
+* Guarda el modelo en la base de datos, exportando una referencia a él.
+*/
 var Partida = mongoose.model("Partida", partidasSchema);
-
+/**
+* Exporta la referencia al Schema
+*/
 module.exports.Partida = Partida;
